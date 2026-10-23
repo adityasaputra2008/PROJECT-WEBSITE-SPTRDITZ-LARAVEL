@@ -1,259 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>SPTRDITZ COLLECTION</title>
-
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-
 <body>
 
-    <!-- NAVBAR -->
-    <header class="navbar">
+<header class="navbar">
 
-        <div class="logo">
-            <a href="/">
-                <img
-                    src="{{ asset('assets/images/logo-sptrditz.png') }}"
-                    alt="SPTRDITZ"
-                >
-            </a>
-        </div>
-
-        <nav class="nav-menu">
-            <a href="/">Home</a>
-            <a href="/shop">Shop</a>
-            <a
-                href="/collection"
-                aria-current="page"
+    <div class="logo">
+        <a href="/" aria-label="SPTRDITZ Home">
+            <img
+                src="{{ asset('assets/images/logo-sptrditz.png') }}"
+                alt="SPTRDITZ"
             >
-                Collection
-            </a>
-            <a href="/about">About</a>
-            <a href="/contact">Contact</a>
-        </nav>
+        </a>
+    </div>
 
-        <div class="nav-actions">
-            <a href="/shop#shop-search">Search</a>
-            <a href="/cart">Cart</a>
+    <nav class="nav-menu" aria-label="Main Navigation">
+
+        <a href="/">Home</a>
+
+        <a href="/shop">Shop</a>
+
+        <a href="/collection" aria-current="page">
+            Collection
+        </a>
+
+        <a href="/about">About</a>
+
+        <a href="/contact">Contact</a>
+
+    </nav>
+
+    <div class="nav-actions">
+
+        <a href="/shop#shop-search">Search</a>
+
+        <a href="/cart">Cart</a>
+
+    </div>
+
+</header>
+
+<main>
+
+    <section class="collection-page-header">
+        <p>SPTRDITZ / COLLECTION</p>
+
+        <h1>DROP 01</h1>
+
+        <p>A selection of products from the first SPTRDITZ collection.</p>
+    </section>
+
+    <section class="collection-products">
+
+        <div class="collection-products-header">
+            <p>SPTRDITZ / DROP 01</p>
+
+            <span>
+                {{ str_pad($products->count(), 2, '0', STR_PAD_LEFT) }}
+                {{ $products->count() === 1 ? 'PRODUCT' : 'PRODUCTS' }}
+            </span>
         </div>
 
-    </header>
+        <div class="collection-product-grid">
 
+            @forelse ($products as $product)
 
-    <!-- COLLECTION HEADER -->
-    <main>
+                <a
+                    href="{{ route('products.show', $product->slug) }}"
+                    class="collection-product-card"
+                >
 
-        <section class="collection-page-header">
+                    <div class="collection-product-image">
+                        <img
+                            src="{{ asset('assets/images/' . $product->image) }}"
+                            alt="{{ $product->name }}"
+                        >
+                    </div>
 
-            <div class="collection-page-label">
-                <span>01</span>
-                <span>COLLECTION</span>
-            </div>
+                    <div class="collection-product-info">
+                        <h3>{{ $product->name }}</h3>
 
-            <div class="collection-page-heading">
+                        <p>
+                            Rp{{ number_format((float) $product->price, 0, ',', '.') }}
+                        </p>
+                    </div>
 
-                <div>
+                </a>
 
-                    <p class="collection-page-eyebrow">
-                        SPTRDITZ / COLLECTION
-                    </p>
+            @empty
 
-                    <h1>
-                        DROP 01
-                    </h1>
-
-                </div>
-
-                <div class="collection-page-intro">
-
-                    <p>
-                        A selection of products from the first
-                        SPTRDITZ collection.
-                    </p>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- COLLECTION PRODUCTS -->
-        <section class="collection-products">
-
-            <div class="collection-products-header">
-
-                <p>
-                    SPTRDITZ / DROP 01
+                <p class="collection-empty">
+                    No products available at the moment.
                 </p>
 
-                <span>
-                    04 PRODUCTS
-                </span>
+            @endforelse
 
-            </div>
+        </div>
 
+    </section>
 
-            <div class="collection-product-grid">
+    <section class="collection-page-cta">
 
+        <p>SPTRDITZ / CONTEMPORARY FASHION</p>
 
-                <!-- PRODUCT 01 -->
-                <a
-                    href="/product-detail?id=1"
-                    class="collection-product-card"
-                >
+        <h2>
+            EXPLORE<br>
+            THE COLLECTION.
+        </h2>
 
-                    <div class="collection-product-image">
+        <a href="/shop" class="collection-cta-button">
+            VIEW SHOP
+        </a>
 
-                        <img
-                            src="{{ asset('assets/images/product-1.png') }}"
-                            alt="SPTRDITZ Product 01"
-                        >
+    </section>
 
-                    </div>
-
-                    <div class="collection-product-info">
-
-                        <h3>
-                            SPTRDITZ PRODUCT 01
-                        </h3>
-
-                        <p>
-                            Rp249.000
-                        </p>
-
-                    </div>
-
-                </a>
-
-
-                <!-- PRODUCT 02 -->
-                <a
-                    href="/product-detail?id=2"
-                    class="collection-product-card"
-                >
-
-                    <div class="collection-product-image">
-
-                        <img
-                            src="{{ asset('assets/images/product-2.png') }}"
-                            alt="SPTRDITZ Product 02"
-                        >
-
-                    </div>
-
-                    <div class="collection-product-info">
-
-                        <h3>
-                            SPTRDITZ PRODUCT 02
-                        </h3>
-
-                        <p>
-                            Rp249.000
-                        </p>
-
-                    </div>
-
-                </a>
-
-
-                <!-- PRODUCT 03 -->
-                <a
-                    href="/product-detail?id=3"
-                    class="collection-product-card"
-                >
-
-                    <div class="collection-product-image">
-
-                        <img
-                            src="{{ asset('assets/images/product-3.png') }}"
-                            alt="SPTRDITZ Product 03"
-                        >
-
-                    </div>
-
-                    <div class="collection-product-info">
-
-                        <h3>
-                            SPTRDITZ PRODUCT 03
-                        </h3>
-
-                        <p>
-                            Rp249.000
-                        </p>
-
-                    </div>
-
-                </a>
-
-
-                <!-- PRODUCT 04 -->
-                <a
-                    href="/product-detail?id=4"
-                    class="collection-product-card"
-                >
-
-                    <div class="collection-product-image">
-
-                        <img
-                            src="{{ asset('assets/images/product-4.png') }}"
-                            alt="SPTRDITZ Product 04"
-                        >
-
-                    </div>
-
-                    <div class="collection-product-info">
-
-                        <h3>
-                            SPTRDITZ PRODUCT 04
-                        </h3>
-
-                        <p>
-                            Rp249.000
-                        </p>
-
-                    </div>
-
-                </a>
-
-
-            </div>
-
-        </section>
-
-
-        <!-- COLLECTION CTA -->
-        <section class="collection-page-cta">
-
-            <p>
-                SPTRDITZ / CONTEMPORARY FASHION
-            </p>
-
-            <h2>
-                EXPLORE<br>
-                THE COLLECTION.
-            </h2>
-
-            <a
-                href="/shop"
-                class="collection-cta-button"
-            >
-                VIEW SHOP
-            </a>
-
-        </section>
-
-    </main>
-
-
-    <!-- JAVASCRIPT -->
-    
+</main>
 
 </body>
-
 </html>

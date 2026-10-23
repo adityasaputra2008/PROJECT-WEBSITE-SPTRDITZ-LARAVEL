@@ -314,100 +314,64 @@ document.addEventListener("DOMContentLoaded", () => {
             "product-detail-description"
         );
 
-    let currentProduct = null;
+let currentProduct = null;
 
-    const renderProductDetail = () => {
-        const isProductDetailPage =
-            productDetailImage ||
-            productDetailCategory ||
-            productDetailTitle ||
-            productDetailPrice ||
-            productDetailDescription;
+const renderProductDetail = () => {
+    const productDetailSection = document.querySelector(".product-detail");
 
-        if (!isProductDetailPage) {
-            return;
-        }
+    if (!productDetailSection) {
+        return;
+    }
 
-        const params =
-            new URLSearchParams(
-                window.location.search
-            );
+    const data = productDetailSection.dataset;
 
-        const productId =
-            params.get("id");
+    if (!data.productId || !data.productName) {
+        console.error("Data produk Laravel tidak ditemukan.");
+        return;
+    }
 
-        currentProduct =
-            getProductById(productId);
-
-        if (!currentProduct) {
-            if (productDetailTitle) {
-                productDetailTitle.textContent =
-                    "PRODUCT NOT FOUND";
-            }
-
-            if (productDetailDescription) {
-                productDetailDescription.textContent =
-                    "The requested product could not be found.";
-            }
-
-            if (productDetailPrice) {
-                productDetailPrice.textContent =
-                    "";
-            }
-
-            return;
-        }
-
-        if (productDetailCategory) {
-            productDetailCategory.textContent =
-                currentProduct.category;
-        }
-
-        if (productDetailTitle) {
-            productDetailTitle.textContent =
-                currentProduct.title;
-        }
-
-        if (productDetailPrice) {
-            productDetailPrice.textContent =
-                formatPrice(
-                    currentProduct.price
-                );
-        }
-
-        if (productDetailDescription) {
-            productDetailDescription.textContent =
-                currentProduct.description;
-        }
-
-        if (productDetailImage) {
-            if (currentProduct.image) {
-                productDetailImage.src =
-                    currentProduct.image;
-
-                productDetailImage.alt =
-                    currentProduct.title;
-
-                productDetailImage.style.display =
-                    "";
-            } else {
-                productDetailImage.removeAttribute(
-                    "src"
-                );
-
-                productDetailImage.alt =
-                    currentProduct.title;
-
-                productDetailImage.style.display =
-                    "none";
-            }
-        }
-
-        window.currentSPTRDITZProduct =
-            currentProduct;
+    currentProduct = {
+        id: Number(data.productId),
+        title: data.productName,
+        category: data.productCategory || "SPTRDITZ COLLECTION",
+        price: Number(data.productPrice) || 0,
+        image: data.productImage || "",
+        description: data.productDescription || ""
     };
 
-    renderProductDetail();
+    if (productDetailCategory) {
+        productDetailCategory.textContent = currentProduct.category;
+    }
+
+    if (productDetailTitle) {
+        productDetailTitle.textContent = currentProduct.title;
+    }
+
+    if (productDetailPrice) {
+        productDetailPrice.textContent = formatPrice(currentProduct.price);
+    }
+
+    if (productDetailDescription) {
+        productDetailDescription.textContent = currentProduct.description;
+    }
+
+    if (productDetailImage) {
+        if (currentProduct.image) {
+            productDetailImage.src = currentProduct.image;
+            productDetailImage.alt = currentProduct.title;
+            productDetailImage.style.display = "";
+        } else {
+            productDetailImage.removeAttribute("src");
+            productDetailImage.alt = currentProduct.title;
+            productDetailImage.style.display = "none";
+        }
+    }
+
+    window.currentSPTRDITZProduct = currentProduct;
+};
+
+renderProductDetail();
+
 
     /* =========================================================
        PRODUCT QUANTITY
@@ -634,17 +598,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 if (existingItem) {
                     existingItem.quantity =
-                        Number(
-                            existingItem.quantity ||
-                                0
-                        ) + quantity;
+                        Number(existingItem.quantity || 0) + quantity;
                 } else {
                     cart.push({
-                        productId:
-                            currentProduct.id,
-
+                        productId: currentProduct.id,
+                        productTitle: currentProduct.title,
+                        productCategory: currentProduct.category,
+                        productPrice: currentProduct.price,
+                        productImage: currentProduct.image,
+                        productDescription: currentProduct.description,
                         size: size,
-
                         quantity: quantity
                     });
                 }
@@ -717,11 +680,27 @@ document.addEventListener("DOMContentLoaded", () => {
             "cart-total-price"
         );
 
-    const getCartProduct = (item) => {
-        return getProductById(
-            item.productId
-        );
-    };
+   const getCartProduct = (item) => {
+    const fallbackProduct = getProductById(
+        item.productId
+    );
+
+    if (
+        item.productTitle &&
+        item.productPrice !== undefined
+    ) {
+        return {
+            id: Number(item.productId),
+            title: item.productTitle,
+            category: item.productCategory || "SPTRDITZ COLLECTION",
+            price: Number(item.productPrice),
+            image: item.productImage || null,
+            description: item.productDescription || ""
+        };
+    }
+
+    return fallbackProduct;
+};
 
     const renderCart = () => {
         if (!cartItemsContainer) {
@@ -734,7 +713,7 @@ document.addEventListener("DOMContentLoaded", () => {
             cartItemsContainer.innerHTML = `
                 <div class="cart-empty">
                     <p>YOUR CART IS EMPTY</p>
-                    <a href="shop.html">
+                    <a href="/shop">
                         CONTINUE SHOPPING
                     </a>
                 </div>
@@ -1158,77 +1137,15 @@ document.addEventListener("DOMContentLoaded", () => {
         );
     }
 
-   /* =========================================================
-       PRODUCT LINKS
-       ========================================================= */
+   
+/* =========================================================
+   PRODUCT LINKS — LARAVEL ROUTES
+   ========================================================= */
 
-const productLinks =
-    document.querySelectorAll(
-        "[data-product-id]"
-    );
+// Product cards already use Laravel URLs from Blade.
+// Do not attach click handlers to every [data-product-id],
+// because the product-detail section also has that attribute.
 
-productLinks.forEach(
-    (element) => {
-        const productId =
-            element.dataset.productId;
-
-        if (!productId) {
-            return;
-        }
-
-        const tagName =
-            element.tagName.toLowerCase();
-
-        if (tagName === "a") {
-            const currentHref =
-                element.getAttribute(
-                    "href"
-                );
-
-            if (
-                !currentHref ||
-                currentHref === "#"
-            ) {
-                element.setAttribute(
-                    "href",
-                    `product-detail.html?id=${productId}`
-                );
-            }
-        }
-
-        element.addEventListener(
-            "click",
-            (event) => {
-
-                /*
-                 * Cart controls harus tetap
-                 * ditangani oleh Cart Controls.
-                 *
-                 * Jangan arahkan user ke
-                 * Product Detail ketika mereka
-                 * sedang menekan tombol:
-                 * - Quantity +
-                 * - Quantity -
-                 * - Remove
-                 */
-                if (
-                    event.target.closest(
-                        ".cart-quantity-plus, .cart-quantity-minus, .cart-item-remove"
-                    )
-                ) {
-                    return;
-                }
-
-                if (
-                    tagName !== "a"
-                ) {
-                    window.location.href =
-                        `product-detail.html?id=${productId}`;
-                }
-            }
-        );
-    }
-);
 
 // =========================================================
 // HOME CATEGORY → SHOP FILTER
@@ -1252,10 +1169,10 @@ homeCategoryButtons.forEach(
                         .trim()
                         .toLowerCase();
 
-                window.location.href =
-                    `shop.html?category=${encodeURIComponent(
-                        category
-                    )}`;
+               window.location.href =
+                `/shop?category=${encodeURIComponent(
+                    category
+                )}`;
             }
         );
     }

@@ -428,248 +428,48 @@
 
             <div class="product-grid">
 
+                @forelse ($products as $product)
+                    @php
+                        $categorySlug = match (strtolower($product->category ?? '')) {
+                            't-shirts', 't-shirt', 'tshirt' => 't-shirts',
+                            'boxy tees', 'boxy-tees' => 'boxy-tees',
+                            'fitted tees', 'fitted-tees' => 'fitted-tees',
+                            'workshirts', 'work shirts' => 'workshirts',
+                            'jeans' => 'jeans',
+                            default => \Illuminate\Support\Str::slug($product->category ?? 'other'),
+                        };
+                    @endphp
 
-                <!-- PRODUCT 01 -->
-
-                <a
-                    href="/product-detail?id=1"
-                    class="product-card"
-                    data-product-id="1"
-                    data-category="t-shirts"
-                >
-
-                    <img
-                        src="{{ asset('assets/images/product-1.png') }}"
-                        alt="SPTRDITZ Product 01"
-                        loading="lazy"
+                    <a
+                        href="{{ route('products.show', ['slug' => $product->slug]) }}"
+                        class="product-card"
+                        data-product-id="{{ $product->id }}"
+                        data-category="{{ $categorySlug }}"
                     >
+                        @if ($product->image)
+                            <img
+                                src="{{ asset('assets/images/' . $product->image) }}"
+                                alt="{{ $product->name }}"
+                                loading="lazy"
+                            >
+                        @else
+                            <div class="product-placeholder">
+                                <span>{{ $product->name }}</span>
+                                <small>SPTRDITZ COLLECTION</small>
+                            </div>
+                        @endif
 
-                    <h3>
-                        SPTRDITZ PRODUCT 01
-                    </h3>
+                        <h3>{{ strtoupper($product->name) }}</h3>
 
-                    <p>
-                        Rp249.000
+                        <p>
+                            Rp{{ number_format((float) $product->price, 0, ',', '.') }}
+                        </p>
+                    </a>
+                @empty
+                    <p class="product-empty-message">
+                        NO PRODUCTS AVAILABLE YET
                     </p>
-
-                </a>
-
-
-
-                <!-- PRODUCT 02 -->
-
-                <a
-                    href="/product-detail?id=2"
-                    class="product-card"
-                    data-product-id="2"
-                    data-category="boxy-tees"
-                >
-
-                    <img
-                        src="{{ asset('assets/images/product-2.png') }}"
-                        alt="SPTRDITZ Product 02"
-                        loading="lazy"
-                    >
-
-                    <h3>
-                        SPTRDITZ PRODUCT 02
-                    </h3>
-
-                    <p>
-                        Rp249.000
-                    </p>
-
-                </a>
-
-
-
-                <!-- PRODUCT 03 -->
-
-                <a
-                    href="/product-detail?id=3"
-                    class="product-card"
-                    data-product-id="3"
-                    data-category="fitted-tees"
-                >
-
-                    <img
-                        src="{{ asset('assets/images/product-3.png') }}"
-                        alt="SPTRDITZ Product 03"
-                        loading="lazy"
-                    >
-
-                    <h3>
-                        SPTRDITZ PRODUCT 03
-                    </h3>
-
-                    <p>
-                        Rp249.000
-                    </p>
-
-                </a>
-
-
-
-                <!-- PRODUCT 04 -->
-
-                <a
-                    href="/product-detail?id=4"
-                    class="product-card"
-                    data-product-id="4"
-                    data-category="workshirts"
-                >
-
-                    <img
-                        src="{{ asset('assets/images/product-4.png') }}"
-                        alt="SPTRDITZ Product 04"
-                        loading="lazy"
-                    >
-
-                    <h3>
-                        SPTRDITZ PRODUCT 04
-                    </h3>
-
-                    <p>
-                        Rp249.000
-                    </p>
-
-                </a>
-
-
-
-                <!-- PRODUCT 05 -->
-
-                <a
-                    href="/product-detail?id=5"
-                    class="product-card"
-                    data-product-id="5"
-                    data-category="t-shirts"
-                >
-
-                    <div class="product-placeholder">
-
-                        <span>
-                            PRODUCT 05
-                        </span>
-
-                        <small>
-                            IMAGE PLACEHOLDER
-                        </small>
-
-                    </div>
-
-
-                    <h3>
-                        SPTRDITZ PRODUCT 05
-                    </h3>
-
-                    <p>
-                        Rp249.000
-                    </p>
-
-                </a>
-
-
-
-                <!-- PRODUCT 06 -->
-
-                <a
-                    href="/product-detail?id=6"
-                    class="product-card"
-                    data-product-id="6"
-                    data-category="boxy-tees"
-                >
-
-                    <div class="product-placeholder">
-
-                        <span>
-                            PRODUCT 06
-                        </span>
-
-                        <small>
-                            IMAGE PLACEHOLDER
-                        </small>
-
-                    </div>
-
-
-                    <h3>
-                        SPTRDITZ PRODUCT 06
-                    </h3>
-
-                    <p>
-                        Rp249.000
-                    </p>
-
-                </a>
-
-
-
-                <!-- PRODUCT 07 -->
-
-                <a
-                    href="/product-detail?id=7"
-                    class="product-card"
-                    data-product-id="7"
-                    data-category="jeans"
-                >
-
-                    <div class="product-placeholder">
-
-                        <span>
-                            PRODUCT 07
-                        </span>
-
-                        <small>
-                            IMAGE PLACEHOLDER
-                        </small>
-
-                    </div>
-
-
-                    <h3>
-                        SPTRDITZ PRODUCT 07
-                    </h3>
-
-                    <p>
-                        Rp249.000
-                    </p>
-
-                </a>
-
-
-
-                <!-- PRODUCT 08 -->
-
-                <a
-                    href="/product-detail?id=8"
-                    class="product-card"
-                    data-product-id="8"
-                    data-category="jeans"
-                >
-
-                    <div class="product-placeholder">
-
-                        <span>
-                            PRODUCT 08
-                        </span>
-
-                        <small>
-                            IMAGE PLACEHOLDER
-                        </small>
-
-                    </div>
-
-
-                    <h3>
-                        SPTRDITZ PRODUCT 08
-                    </h3>
-
-                    <p>
-                        Rp249.000
-                    </p>
-
-                </a>
+                @endforelse
 
             </div>
 

@@ -468,420 +468,57 @@
             </div>
 
 
-
             <div class="shop-product-grid">
 
+                @forelse ($products as $product)
+                    @php
+                        $categorySlug = match (strtolower($product->category ?? '')) {
+                            't-shirts', 't-shirt', 'tshirt' => 't-shirts',
+                            'boxy tees', 'boxy-tees' => 'boxy-tees',
+                            'fitted tees', 'fitted-tees' => 'fitted-tees',
+                            'workshirts', 'work shirts' => 'workshirts',
+                            'jeans' => 'jeans',
+                            default => \Illuminate\Support\Str::slug($product->category ?? 'other'),
+                        };
+                    @endphp
 
-                <!-- =================================================
-                     PRODUCT 01
-                ================================================== -->
-
-                <a
-                    href="/product-detail?id=1"
-                    class="shop-product-card"
-                    data-product-id="1"
-                    data-category="t-shirts"
-                >
-
-                    <div class="shop-product-image">
-
-                        <img
-                            src="{{ asset('assets/images/product-1.png') }}"
-                            alt="SPTRDITZ Product 01"
-                            loading="lazy"
-                        >
-
-                    </div>
-
-
-
-                    <div class="shop-product-info">
-
-                        <div>
-
-                            <h3>
-                                SPTRDITZ PRODUCT 01
-                            </h3>
-
-                            <p>
-                                T-SHIRT
-                            </p>
-
+                    <a
+                        href="{{ route('products.show', ['slug' => $product->slug]) }}"
+                        class="shop-product-card"
+                        data-product-id="{{ $product->id }}"
+                        data-category="{{ $categorySlug }}"
+                    >
+                        <div class="shop-product-image">
+                            @if ($product->image)
+                                <img
+                                    src="{{ asset('assets/images/' . $product->image) }}"
+                                    alt="{{ $product->name }}"
+                                    loading="lazy"
+                                >
+                            @else
+                                <div class="shop-product-placeholder">
+                                    <span>{{ $product->name }}</span>
+                                    <small>SPTRDITZ COLLECTION</small>
+                                </div>
+                            @endif
                         </div>
 
-
-                        <span>
-                            Rp249.000
-                        </span>
-
-                    </div>
-
-                </a>
-
-
-
-                <!-- =================================================
-                     PRODUCT 02
-                ================================================== -->
-
-                <a
-                    href="/product-detail?id=2"
-                    class="shop-product-card"
-                    data-product-id="2"
-                    data-category="boxy-tees"
-                >
-
-                    <div class="shop-product-image">
-
-                        <img
-                            src="{{ asset('assets/images/product-2.png') }}"
-                            alt="SPTRDITZ Product 02"
-                            loading="lazy"
-                        >
-
-                    </div>
-
-
-
-                    <div class="shop-product-info">
-
-                        <div>
-
-                            <h3>
-                                SPTRDITZ PRODUCT 02
-                            </h3>
-
-                            <p>
-                                BOXY TEE
-                            </p>
-
-                        </div>
-
-
-                        <span>
-                            Rp249.000
-                        </span>
-
-                    </div>
-
-                </a>
-
-
-
-                <!-- =================================================
-                     PRODUCT 03
-                ================================================== -->
-
-                <a
-                    href="/product-detail?id=3"
-                    class="shop-product-card"
-                    data-product-id="3"
-                    data-category="fitted-tees"
-                >
-
-                    <div class="shop-product-image">
-
-                        <img
-                            src="{{ asset('assets/images/product-3.png') }}"
-                            alt="SPTRDITZ Product 03"
-                            loading="lazy"
-                        >
-
-                    </div>
-
-
-
-                    <div class="shop-product-info">
-
-                        <div>
-
-                            <h3>
-                                SPTRDITZ PRODUCT 03
-                            </h3>
-
-                            <p>
-                                FITTED TEE
-                            </p>
-
-                        </div>
-
-
-                        <span>
-                            Rp249.000
-                        </span>
-
-                    </div>
-
-                </a>
-
-
-
-                <!-- =================================================
-                     PRODUCT 04
-                ================================================== -->
-
-                <a
-                    href="/product-detail?id=4"
-                    class="shop-product-card"
-                    data-product-id="4"
-                    data-category="workshirts"
-                >
-
-                    <div class="shop-product-image">
-
-                        <img
-                            src="{{ asset('assets/images/product-4.png') }}"
-                            alt="SPTRDITZ Product 04"
-                            loading="lazy"
-                        >
-
-                    </div>
-
-
-
-                    <div class="shop-product-info">
-
-                        <div>
-
-                            <h3>
-                                SPTRDITZ PRODUCT 04
-                            </h3>
-
-                            <p>
-                                WORKSHIRT
-                            </p>
-
-                        </div>
-
-
-                        <span>
-                            Rp249.000
-                        </span>
-
-                    </div>
-
-                </a>
-
-
-
-                <!-- =================================================
-                     PRODUCT 05
-                     PLACEHOLDER
-                ================================================== -->
-
-                <a
-                    href="/product-detail?id=5"
-                    class="shop-product-card"
-                    data-product-id="5"
-                    data-category="t-shirts"
-                >
-
-                    <div class="shop-product-image">
-
-                        <div class="shop-product-placeholder">
+                        <div class="shop-product-info">
+                            <div>
+                                <h3>{{ $product->name }}</h3>
+                                <p>{{ strtoupper($product->category ?? 'SPTRDITZ COLLECTION') }}</p>
+                            </div>
 
                             <span>
-                                PRODUCT 05
+                                Rp{{ number_format((float) $product->price, 0, ',', '.') }}
                             </span>
-
-                            <small>
-                                IMAGE PLACEHOLDER
-                            </small>
-
                         </div>
-
-                    </div>
-
-
-
-                    <div class="shop-product-info">
-
-                        <div>
-
-                            <h3>
-                                SPTRDITZ PRODUCT 05
-                            </h3>
-
-                            <p>
-                                T-SHIRT
-                            </p>
-
-                        </div>
-
-
-                        <span>
-                            Rp249.000
-                        </span>
-
-                    </div>
-
-                </a>
-
-
-
-                <!-- =================================================
-                     PRODUCT 06
-                     PLACEHOLDER
-                ================================================== -->
-
-                <a
-                    href="/product-detail?id=6"
-                    class="shop-product-card"
-                    data-product-id="6"
-                    data-category="boxy-tees"
-                >
-
-                    <div class="shop-product-image">
-
-                        <div class="shop-product-placeholder">
-
-                            <span>
-                                PRODUCT 06
-                            </span>
-
-                            <small>
-                                IMAGE PLACEHOLDER
-                            </small>
-
-                        </div>
-
-                    </div>
-
-
-
-                    <div class="shop-product-info">
-
-                        <div>
-
-                            <h3>
-                                SPTRDITZ PRODUCT 06
-                            </h3>
-
-                            <p>
-                                BOXY TEE
-                            </p>
-
-                        </div>
-
-
-                        <span>
-                            Rp249.000
-                        </span>
-
-                    </div>
-
-                </a>
-
-
-
-                <!-- =================================================
-                     PRODUCT 07
-                     PLACEHOLDER
-                ================================================== -->
-
-                <a
-                    href="/product-detail?id=7"
-                    class="shop-product-card"
-                    data-product-id="7"
-                    data-category="jeans"
-                >
-
-                    <div class="shop-product-image">
-
-                        <div class="shop-product-placeholder">
-
-                            <span>
-                                PRODUCT 07
-                            </span>
-
-                            <small>
-                                IMAGE PLACEHOLDER
-                            </small>
-
-                        </div>
-
-                    </div>
-
-
-
-                    <div class="shop-product-info">
-
-                        <div>
-
-                            <h3>
-                                SPTRDITZ PRODUCT 07
-                            </h3>
-
-                            <p>
-                                JEANS
-                            </p>
-
-                        </div>
-
-
-                        <span>
-                            Rp249.000
-                        </span>
-
-                    </div>
-
-                </a>
-
-
-
-                <!-- =================================================
-                     PRODUCT 08
-                     PLACEHOLDER
-                ================================================== -->
-
-                <a
-                    href="/product-detail?id=8"
-                    class="shop-product-card"
-                    data-product-id="8"
-                    data-category="jeans"
-                >
-
-                    <div class="shop-product-image">
-
-                        <div class="shop-product-placeholder">
-
-                            <span>
-                                PRODUCT 08
-                            </span>
-
-                            <small>
-                                IMAGE PLACEHOLDER
-                            </small>
-
-                        </div>
-
-                    </div>
-
-
-
-                    <div class="shop-product-info">
-
-                        <div>
-
-                            <h3>
-                                SPTRDITZ PRODUCT 08
-                            </h3>
-
-                            <p>
-                                JEANS
-                            </p>
-
-                        </div>
-
-
-                        <span>
-                            Rp249.000
-                        </span>
-
-                    </div>
-
-                </a>
-
+                    </a>
+                @empty
+                    <p class="shop-empty-message">
+                        NO PRODUCTS AVAILABLE YET
+                    </p>
+                @endforelse
 
             </div>
 
